@@ -5,12 +5,10 @@ win = gf.GraphWin('navezinha piu piu', 700, 800, autoflush=False)
 
 
 
-def nave():   
-    nave = gf.Image(gf.Point(350, 500), 'img/nave.png')
-    return nave
+nave = gf.Image(gf.Point(350, 500), 'img/nave.png')
 
-x = nave()
-x.draw(win)
+nave.draw(win)
+
 
 while True:
     direcao = win.getKey()
