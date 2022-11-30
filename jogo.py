@@ -3,21 +3,23 @@ from time import sleep
 
 win = gf.GraphWin('navezinha piu piu', 700, 800, autoflush=False)
 
+background = gf.Image(gf.Point(350, 400), 'img/background.png')
+background.draw(win)
 
-
-nave = gf.Image(gf.Point(350, 500), 'img/nave.png')
-
+nave = gf.Image(gf.Point(350, 750), 'img/nave.png')
 nave.draw(win)
 
-
 while True:
-    direcao = win.getKey()
+    direcao = win.checkKey()
+    lado= win.checkKey()
     if direcao == 'a':
-        x.move(-15, 0)
-    
+        nave.move(-5, 0)
     if direcao == 'd':
-        x.move(15, 0)
-
+        nave.move(5, 0)
+    if lado == 'a':
+        nave.move(-5,0)
+    if lado == 'd':
+        nave.move(5,0)
 
 
 
