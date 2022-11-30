@@ -17,7 +17,7 @@ while True:
     if direcao == 'a':
         x.move(-15, 0)
     
-    dif direcao == 'd':
+    if direcao == 'd':
         x.move(15, 0)
 
 
