@@ -43,14 +43,12 @@ def geraInimigo():
         cont+=1
         print(inimigo.getCenter())'''
 
-
 lista_inimigos=[]
 lista_tiros=[]
 cont=0
 seg=0
 ms=0
 parametro=60
-
 
 while True:
     temporizador=gf.Text(gf.Point(50,50), str(seg))
@@ -76,7 +74,6 @@ while True:
             elem.undraw()
             lista_inimigos.remove(elem)
         
-
     #bordaesq = gf.Point(50, 750)
     direcao = win.checkKey()
     if direcao == 'a':
@@ -98,22 +95,16 @@ while True:
     gf.update(65)
     temporizador.undraw()
         
-
-
-    
-
     #print(hitbox.getP2())
     #print(tiro.getP2())
     #print(tiro.getCenter())
 
-
-
-
 win.getMouse()
 win.close()
-
 
 '''Proximos passos:
 1- Aumentar a dificuldade conforme o contador de pontuação
 2- Estabelecer a colisão dos objetos.
-3- Melhorar a estética do game.'''
+3- Melhorar a estética do game.
+4- Talvez implementar um menu.
+'''
