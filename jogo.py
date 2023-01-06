@@ -56,7 +56,7 @@ while True:
     temporizador.setTextColor('white')
     temporizador.draw(win)
     if ms==parametro:
-        parametro+=1
+        parametro+=60
         seg+=1
         print(seg)
     if cont ==200:
