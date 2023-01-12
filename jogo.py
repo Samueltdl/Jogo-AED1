@@ -4,6 +4,43 @@ import random
 
 win = gf.GraphWin('navezinha piu piu', 700, 800, autoflush=False)
 
+def menu():
+    background = gf.Image(gf.Point(350, 400), 'img/background.png')
+    botaoIniciar = gf.Rectangle(gf.Point(250, 250), gf.Point(450, 330))
+    botaoIniciar.setFill('dark green')
+    botaoIniciar.setOutline('white')
+
+    botaoSobre = gf.Rectangle(gf.Point(250, 350), gf.Point(450, 430))
+    botaoSobre.setFill('dark orange')
+    botaoSobre.setOutline('white')
+
+    botaoSair = gf.Rectangle(gf.Point(250, 450), gf.Point(450, 530))
+    botaoSair.setFill('dark red')
+    botaoSair.setOutline('white')
+
+    return [background, botaoIniciar, botaoSobre, botaoSair]
+
+itensMenu = menu()
+
+def sobreOjogo():
+    background = gf.Image(gf.Point(350, 400), 'img/background.png')
+    texto1 = gf.Text(gf.Point(345, 250), f'Sprisco Invaders é um jogo de batalha espacial onde o jogador\ntem o objetivo de protejer o planeta Terra de invasores alienígenas.')
+    texto1.setTextColor('white')
+    texto1.setSize(14)
+
+    texto2 = gf.Text(gf.Point(340, 350), f'O jogador controla uma nave espacial que possui lançadores de laser\naltamente tecnológicos e que são capazes de eliminar os inimigos.')
+    texto2.setTextColor('white')
+    texto2.setSize(14)
+
+    texto3 = gf.Text(gf.Point(340, 535), f'O jogo conta com uma mecânica simples e de fácil aprendizado.\n\nMapeamento de botões:\n\nAtirar: clique esquerdo do mouse\n\nMover a nave para equerda: tecla "a"\n\nMover a nave para direita: tecla "d"')
+    texto3.setTextColor('white')
+    texto3.setSize(14)
+
+
+    return [background, texto1, texto2, texto3]
+
+itensSobre = sobreOjogo()
+
 def drawEstrutura():
     background = gf.Image(gf.Point(350, 400), 'img/background.png')
     pontuacao= gf.Text(gf.Point(55,20), "Pontuação:")
@@ -13,11 +50,44 @@ def drawEstrutura():
     Abates.setTextColor('white')
     Abates.setSize(15)
 
-    background.draw(win)
-    pontuacao.draw(win)
-    Abates.draw(win)
+    return [background, pontuacao, Abates]
 
-drawEstrutura()
+itensJogo = drawEstrutura()
+
+iniciar = False
+sair = False
+
+while iniciar == False and sair == False:
+    for elem in itensSobre:
+        elem.undraw()
+    for elem in itensMenu:
+        elem.draw(win)
+
+    clique = win.getMouse()
+    if 250 < clique.getX() < 450 and 250 < clique.getY() < 330:
+        iniciar = True
+    
+    if 250 < clique.getX() < 450 and 350 < clique.getY() < 430:
+        for elem in itensMenu:
+            elem.undraw()        
+        for elem in itensSobre:
+            elem.draw(win)
+        win.getMouse()
+
+    if 250 < clique.getX() < 450 and 450 < clique.getY() < 530:
+        sair = True
+
+if sair == True:
+    for elem in itensMenu:
+        elem.undraw()
+    win.close()
+
+if iniciar == True:    
+    for elem in itensMenu:
+        elem.undraw()
+    for elem in itensJogo:
+        elem.draw(win)
+
 
 nave = gf.Image(gf.Point(350, 745), 'img/nave.png')
 hitbox= gf.Circle(gf.Point(350, 750), 40)
@@ -33,7 +103,6 @@ ms=0
 parametro=60
 inimigos_mortos = 0
 cont_parado = 0
-#print(nave.getAnchor())
 direcao = ''
 cont_d_parado = 0
 to_em_d = False
@@ -42,36 +111,35 @@ cont_a_parado = 0
 to_em_a = False
 loop_a = False 
 
-
-
 while True:
 
     #------------------- TEMPORIZADOR E CONTADOR DE ABATES --------------------------------
 
-    temporizador=gf.Text(gf.Point(50,50), str(seg))
+    temporizador = gf.Text(gf.Point(50,50), str(seg))
     temporizador.setSize(15)
     temporizador.setTextColor('white')
     temporizador.draw(win)
-    contAbates=gf.Text(gf.Point(200,50), str(inimigos_mortos))
+    contAbates = gf.Text(gf.Point(200,50), str(inimigos_mortos))
     contAbates.setSize(15)
     contAbates.setTextColor('white')
     contAbates.draw(win)
-    if ms==parametro:
-        parametro+=60
-        seg+=1
+
+    if ms == parametro:
+        parametro += 60
+        seg += 1
         print(seg)
-    if cont ==100:
-        X= random.randint(5,680)
+    if cont == 100:
+        X = random.randint(5,680)
         inimigo = gf.Rectangle(gf.Point(X, -20), gf.Point(X + 40, 20)) # CRIA INIMIGOS DE ACORDO COM O TEMPO, E OS ADICIONA NA LISTA DE INIMIGOS
         inimigo.setOutline('red')
         inimigo.setFill('red')
         lista_inimigos.append(inimigo)
         inimigo.draw(win)
-        cont=0
+        cont = 0
     
     for elem in lista_inimigos:
         elem.move(0,1)
-        if elem.getCenter().getY()== 820: # MOVE OS INIMIGOS E TAMBÉM OS ELIMINA EM CASO DE PASSAR DA TELA
+        if elem.getCenter().getY() == 820: # MOVE OS INIMIGOS E TAMBÉM OS ELIMINA EM CASO DE PASSAR DA TELA
             elem.undraw()
             lista_inimigos.remove(elem)
         
@@ -81,6 +149,16 @@ while True:
 
     teste = win.checkKey()
     print("                                 >",teste,"<")  
+
+    #--------------------- TECLA PARA PAUSAR O JOGO ----------------------
+    if teste == 'Escape':
+        pause = gf.Text(gf.Point(350, 400), f'PAUSE')
+        pause.setTextColor('white')
+        pause.setSize(36)
+        pause.draw(win)
+
+        win.getMouse()
+        pause.undraw()
 
     if teste == 'd':
         cont_d_parado = 0        
@@ -95,7 +173,6 @@ while True:
         cont_d_parado = 0        
         to_em_d = False 
         loop_a = True 
-
 
     if teste == '' and to_em_d:        #MOVIMENTAÇÃO LISA DO PRISCO
         if cont_d_parado < 32:
@@ -145,7 +222,7 @@ while True:
 
     for elem in lista_tiros:
         for a in lista_inimigos:
-            if elem.getP1().getY() <= a.getP2().getY():
+            if elem.getP1().getY() <= a.getP2().getY() <= hitbox.getP1().getY():
                 if a.getP1().getX() <= elem.getP1().getX() <= a.getP2().getX():
                     print('aaaaaaaaaaaaa')
                     elem.undraw()
@@ -163,9 +240,6 @@ while True:
     #print(hitbox.getP2())
     #print(tiro.getP2())
     #print(tiro.getCenter())
-
-win.getMouse()
-win.close()
 
 '''Proximos passos:
 1- Aumentar a dificuldade conforme o contador de pontuação
