@@ -55,13 +55,15 @@ def drawEstrutura():
     #retanguloBranco = gf.Rectangle(gf.Point(0, 1), gf.Point(700, 50))
     #retanguloBranco.setFill('white')
 
-    vida = gf.Rectangle(gf.Point(375, 5), gf.Point(690, 25))
-    vida.setOutline('white')
+    retangulo_vida = gf.Rectangle(gf.Point(375, 5), gf.Point(690, 25))
+    retangulo_vida.setWidth(2)
+    retangulo_vida.setOutline('white')
 
-    vidaNave = gf.Rectangle(gf.Point(500, 28), gf.Point(690, 47))
-    vidaNave.setOutline('white')
+    retangulo_vidaNave = gf.Rectangle(gf.Point(500, 28), gf.Point(690, 47))
+    retangulo_vidaNave.setWidth(2)
+    retangulo_vidaNave.setOutline('white')
 
-    return [background, pontuacao, Abates, vida, vidaNave]
+    return [background, pontuacao, Abates, retangulo_vida, retangulo_vidaNave]
 
 itensJogo = drawEstrutura()
 
@@ -103,6 +105,11 @@ while iniciar == False and sair == False:
             elem.draw(win)
         break
 
+#def retangulo_vida_planeta():
+
+test= gf.Rectangle(gf.Point(377, 7), gf.Point(390, 22))
+test.setFill('red')
+test.draw(win)
 
 nave = gf.Image(gf.Point(350, 745), 'img/nave.png')
 hitbox= gf.Circle(gf.Point(350, 750), 40)
@@ -133,6 +140,9 @@ def explosao(x):
 
 ta_explodindo= False
 qual_explosao= 0
+dificultador_speedinimigo=50
+dificultador_qntinimigo=50
+timer=100
 
 while True:
 
@@ -152,7 +162,7 @@ while True:
         seg += 1
         #print(seg)
 
-    if cont == 50:
+    if cont == timer:
         X = random.randint(5,680)
         inimigo = gf.Rectangle(gf.Point(X, -20), gf.Point(X + 40, 20)) # CRIA INIMIGOS DE ACORDO COM O TEMPO, E OS ADICIONA NA LISTA DE INIMIGOS
         inimigo.setOutline('red')
@@ -269,14 +279,18 @@ while True:
         if qual_explosao >= len(boom):
             ta_explodindo= False
             qual_explosao=0
-    
-                    
-                    
-    
 
-    if seg > 50:
-        velocidadeInimigo = 1.5
-
+    if seg > dificultador_speedinimigo:
+        velocidadeInimigo += 0.5
+        dificultador_speedinimigo+=50
+    
+    if seg > dificultador_qntinimigo:
+        if timer > 10:
+            dificultador_qntinimigo+=50
+            timer-=10
+        
+    #print(velocidadeInimigo)
+    print(timer)
     cont+=1
     ms+=1
     gf.update(60)
