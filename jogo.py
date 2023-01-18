@@ -152,7 +152,7 @@ while True:
         seg += 1
         #print(seg)
 
-    if cont == 100:
+    if cont == 50:
         X = random.randint(5,680)
         inimigo = gf.Rectangle(gf.Point(X, -20), gf.Point(X + 40, 20)) # CRIA INIMIGOS DE ACORDO COM O TEMPO, E OS ADICIONA NA LISTA DE INIMIGOS
         inimigo.setOutline('red')
