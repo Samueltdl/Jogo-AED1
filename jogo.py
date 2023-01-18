@@ -43,12 +43,16 @@ itensSobre = sobreOjogo()
 
 def drawEstrutura():
     background = gf.Image(gf.Point(350, 400), 'img/background.png')
+
     pontuacao= gf.Text(gf.Point(55,20), "Pontuação:")
     pontuacao.setTextColor('white')
     pontuacao.setSize(15)
+
     Abates= gf.Text(gf.Point(200,20), "Abates:")
     Abates.setTextColor('white')
     Abates.setSize(15)
+
+    vida = gf.Rectangle(gf.Point())
 
     return [background, pontuacao, Abates]
 
@@ -118,21 +122,21 @@ velocidadeInimigo = 1
 
 while True:
 
-    #------------------- TEMPORIZADOR E CONTADOR DE ABATES --------------------------------
-
+    #---------------------------------TEMPORIZADOR------------------------------------
     temporizador = gf.Text(gf.Point(50,50), str(seg))
     temporizador.setSize(15)
     temporizador.setTextColor('white')
     temporizador.draw(win)
+    #----------------------------------CONTADOR DE ABATES-----------------------------
     contAbates = gf.Text(gf.Point(200,50), str(inimigos_mortos))
     contAbates.setSize(15)
     contAbates.setTextColor('white')
     contAbates.draw(win)
-
+    
     if ms == parametro:
         parametro += 60
         seg += 1
-        print(seg)
+        #print(seg)
 
     if cont == 100:
         X = random.randint(5,680)
@@ -202,12 +206,14 @@ while True:
         direcao = teste
     
     if direcao == 'a':
-        hitbox.move(-4,0)
-        nave.move(-4, 0)       
+        if hitbox.getCenter().getX() > 2:
+            hitbox.move(-4,0)
+            nave.move(-4, 0)       
 
     if direcao == 'd':
-        hitbox.move(4,0)
-        nave.move(4, 0)
+        if hitbox.getCenter().getX() < 698:
+            hitbox.move(4,0)
+            nave.move(4, 0)
 
     #---------------------------------- TIRO ---------------------------------------      
     if len(lista_tiros) < 4:
@@ -226,7 +232,6 @@ while True:
             lista_tiros.remove(elem)
 
     #--------------------------- COLISÃO DOS TIROS COM INIMIGOS---------------------------------
-
     for elem in lista_tiros:
         for a in lista_inimigos:
             if elem.getP1().getY() <= a.getP2().getY() <= hitbox.getP1().getY():
@@ -237,9 +242,10 @@ while True:
                     a.undraw()
                     lista_inimigos.remove(a)
                     inimigos_mortos += 1
+                    seg += 2
     
 
-    if seg > 10:
+    if seg > 50:
         velocidadeInimigo = 1.5
 
     cont+=1
