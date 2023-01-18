@@ -52,16 +52,16 @@ def drawEstrutura():
     Abates.setTextColor('white')
     Abates.setSize(15)
 
-    retanguloBranco = gf.Rectangle(gf.Point(350, 0), gf.Point(700, 70))
-    retanguloBranco.setFill('white')
+    #retanguloBranco = gf.Rectangle(gf.Point(0, 1), gf.Point(700, 50))
+    #retanguloBranco.setFill('white')
 
-    vida = gf.Rectangle(gf.Point(350, 10), gf.Point(690, 40))
-    vida.setOutline('black')
+    vida = gf.Rectangle(gf.Point(375, 5), gf.Point(690, 25))
+    vida.setOutline('white')
 
-    vidanave = gf.Rectangle(gf.Point(350, 50), gf.Point(690, 80))
-    vidanave.setOutline('black')
+    vidaNave = gf.Rectangle(gf.Point(500, 28), gf.Point(690, 47))
+    vidaNave.setOutline('white')
 
-    return [background, pontuacao, Abates,retanguloBranco, vida, vidanave]
+    return [background, pontuacao, Abates, vida, vidaNave]
 
 itensJogo = drawEstrutura()
 
