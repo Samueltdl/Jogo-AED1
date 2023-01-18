@@ -127,6 +127,13 @@ to_em_a = False
 loop_a = False 
 velocidadeInimigo = 1
 
+def explosao(x):
+    explosoes= [gf.Image(x.getCenter(), 'img/explosao 0.png'),gf.Image(x.getCenter(), 'img/explosao 1.png'),gf.Image(x.getCenter(), 'img/explosao 2.png'),gf.Image(x.getCenter(), 'img/explosao 3.png'),gf.Image(x.getCenter(), 'img/explosao 4.png'),gf.Image(x.getCenter(), 'img/explosao 5.png'),gf.Image(x.getCenter(), 'img/explosao 6.png')]
+    return explosoes
+
+ta_explodindo= False
+qual_explosao= 0
+
 while True:
 
     #---------------------------------TEMPORIZADOR------------------------------------
@@ -246,10 +253,25 @@ while True:
                     
                     elem.undraw()
                     lista_tiros.remove(elem)
-                    a.undraw()
+                    a.undraw()      
+                    ta_explodindo= True      
+                    quem_explodiu= a
                     lista_inimigos.remove(a)
                     inimigos_mortos += 1
                     seg += 2
+
+    if ta_explodindo:
+        boom= explosao(quem_explodiu)           
+        boom[qual_explosao].draw(win)
+        gf.update(100)
+        boom[qual_explosao].undraw()
+        qual_explosao+=1
+        if qual_explosao >= len(boom):
+            ta_explodindo= False
+            qual_explosao=0
+    
+                    
+                    
     
 
     if seg > 50:
