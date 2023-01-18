@@ -57,11 +57,12 @@ itensJogo = drawEstrutura()
 iniciar = False
 sair = False
 
+for elem in itensMenu:
+    elem.draw(win)
+
 while iniciar == False and sair == False:
     for elem in itensSobre:
         elem.undraw()
-    for elem in itensMenu:
-        elem.draw(win)
 
     clique = win.getMouse()
     if 250 < clique.getX() < 450 and 250 < clique.getY() < 330:
@@ -73,20 +74,23 @@ while iniciar == False and sair == False:
         for elem in itensSobre:
             elem.draw(win)
         win.getMouse()
+        for elem in itensMenu:
+            elem.draw(win)
 
     if 250 < clique.getX() < 450 and 450 < clique.getY() < 530:
         sair = True
 
-if sair == True:
-    for elem in itensMenu:
-        elem.undraw()
-    win.close()
+    if sair == True:
+        for elem in itensMenu:
+            elem.undraw()
+        win.close()
 
-if iniciar == True:    
-    for elem in itensMenu:
-        elem.undraw()
-    for elem in itensJogo:
-        elem.draw(win)
+    if iniciar == True:    
+        for elem in itensMenu:
+            elem.undraw()
+        for elem in itensJogo:
+            elem.draw(win)
+        break
 
 
 nave = gf.Image(gf.Point(350, 745), 'img/nave.png')
@@ -148,7 +152,7 @@ while True:
     #----------------------- MOVIMENTAÇÃO DA NAVE -----------------------------------
 
     teste = win.checkKey()
-    print("                                 >",teste,"<")  
+    #print("                                 >",teste,"<")  
 
     #--------------------- TECLA PARA PAUSAR O JOGO ----------------------
     if teste == 'Escape':
@@ -193,12 +197,12 @@ while True:
         direcao = teste
     
     if direcao == 'a':
-        hitbox.move(-2,0)
-        nave.move(-2, 0)       
+        hitbox.move(-4,0)
+        nave.move(-4, 0)       
 
     if direcao == 'd':
-        hitbox.move(2,0)
-        nave.move(2, 0)
+        hitbox.move(4,0)
+        nave.move(4, 0)
 
 
      #------------------ TIRO ---------------------------------------
@@ -224,7 +228,7 @@ while True:
         for a in lista_inimigos:
             if elem.getP1().getY() <= a.getP2().getY() <= hitbox.getP1().getY():
                 if a.getP1().getX() <= elem.getP1().getX() <= a.getP2().getX():
-                    print('aaaaaaaaaaaaa')
+                    
                     elem.undraw()
                     lista_tiros.remove(elem)
                     a.undraw()
@@ -233,7 +237,7 @@ while True:
     
     cont+=1
     ms+=1
-    gf.update(65)
+    gf.update(60)
     temporizador.undraw()
     contAbates.undraw()
         
