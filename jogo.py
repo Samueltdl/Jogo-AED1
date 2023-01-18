@@ -114,6 +114,7 @@ loop_d = False
 cont_a_parado = 0
 to_em_a = False
 loop_a = False 
+velocidadeInimigo = 1
 
 while True:
 
@@ -132,6 +133,7 @@ while True:
         parametro += 60
         seg += 1
         print(seg)
+
     if cont == 100:
         X = random.randint(5,680)
         inimigo = gf.Rectangle(gf.Point(X, -20), gf.Point(X + 40, 20)) # CRIA INIMIGOS DE ACORDO COM O TEMPO, E OS ADICIONA NA LISTA DE INIMIGOS
@@ -142,7 +144,7 @@ while True:
         cont = 0
     
     for elem in lista_inimigos:
-        elem.move(0,1)
+        elem.move(0,velocidadeInimigo)
         if elem.getCenter().getY() == 820: # MOVE OS INIMIGOS E TAMBÉM OS ELIMINA EM CASO DE PASSAR DA TELA
             elem.undraw()
             lista_inimigos.remove(elem)
@@ -150,11 +152,10 @@ while True:
     #bordaesq = gf.Point(50, 750)
 
     #----------------------- MOVIMENTAÇÃO DA NAVE -----------------------------------
-
     teste = win.checkKey()
     #print("                                 >",teste,"<")  
 
-    #--------------------- TECLA PARA PAUSAR O JOGO ----------------------
+    #-------------------------- TECLA PARA PAUSAR O JOGO ----------------------------
     if teste == 'Escape':
         pause = gf.Text(gf.Point(350, 400), f'PAUSE')
         pause.setTextColor('white')
@@ -164,6 +165,7 @@ while True:
         win.getMouse()
         pause.undraw()
 
+    #---------------------TECLA PARA MOVER A NAVE PARA A DIREITA -----------------------
     if teste == 'd':
         cont_d_parado = 0        
         to_em_d = True        
@@ -171,6 +173,7 @@ while True:
         to_em_a = False
         loop_d = True        
 
+    #-------------------TECLA PARA MOVER A NAVE PARA A EQAUERDA--------------------------
     if teste == 'a':
         cont_a_parado = 0        
         to_em_a = True        
@@ -178,7 +181,8 @@ while True:
         to_em_d = False 
         loop_a = True 
 
-    if teste == '' and to_em_d:        #MOVIMENTAÇÃO LISA DO PRISCO
+    #-----------------------MOVIMENTAÇÃO LISA DO PRISCO--------------------------------------
+    if teste == '' and to_em_d:
         if cont_d_parado < 32:
             direcao = 'd'
             cont_d_parado += 1
@@ -186,6 +190,7 @@ while True:
         else:                
             to_em_d = False
             direcao = ''
+
     elif teste == '' and to_em_a:
         if cont_a_parado < 32:
             direcao = 'a'
@@ -204,16 +209,14 @@ while True:
         hitbox.move(4,0)
         nave.move(4, 0)
 
-
-     #------------------ TIRO ---------------------------------------
-      
-        
-    if win.checkMouse():
-        tiro = gf.Rectangle(gf.Point(hitbox.getCenter().getX(), 700), gf.Point(hitbox.getCenter().getX(),720))
-        tiro.setOutline('red')
-        lista_tiros.append(tiro)
-        tiro.draw(win)
-        #print(tiro.getP1())
+    #---------------------------------- TIRO ---------------------------------------      
+    if len(lista_tiros) < 4:
+        if win.checkMouse():
+            tiro = gf.Rectangle(gf.Point(hitbox.getCenter().getX(), 700), gf.Point(hitbox.getCenter().getX(),720))
+            tiro.setOutline('red')
+            lista_tiros.append(tiro)
+            tiro.draw(win)
+            #print(tiro.getP1())
         
     for elem in lista_tiros:
         elem.move(0,-10)
@@ -222,7 +225,7 @@ while True:
             elem.undraw()
             lista_tiros.remove(elem)
 
-    #------------- COLISÃO DOS TIROS COM INIMIGOS---------------------------------
+    #--------------------------- COLISÃO DOS TIROS COM INIMIGOS---------------------------------
 
     for elem in lista_tiros:
         for a in lista_inimigos:
@@ -235,6 +238,10 @@ while True:
                     lista_inimigos.remove(a)
                     inimigos_mortos += 1
     
+
+    if seg > 10:
+        velocidadeInimigo = 1.5
+
     cont+=1
     ms+=1
     gf.update(60)
