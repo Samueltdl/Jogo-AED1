@@ -52,20 +52,51 @@ def drawEstrutura():
     Abates.setTextColor('white')
     Abates.setSize(15)
 
-    #retanguloBranco = gf.Rectangle(gf.Point(0, 1), gf.Point(700, 50))
-    #retanguloBranco.setFill('white')
-
-    retangulo_vida = gf.Rectangle(gf.Point(375, 5), gf.Point(690, 25))
+    retangulo_vida = gf.Rectangle(gf.Point(502, 5), gf.Point(688, 25))
     retangulo_vida.setWidth(2)
     retangulo_vida.setOutline('white')
+    texto_vida = gf.Text(gf.Point(428, 13), f'Vida do planeta:')
+    texto_vida.setTextColor('white')
+    texto_vida.setSize(14)
 
-    retangulo_vidaNave = gf.Rectangle(gf.Point(500, 28), gf.Point(690, 47))
+    retangulo_vidaNave = gf.Rectangle(gf.Point(593, 28), gf.Point(688, 47))
     retangulo_vidaNave.setWidth(2)
     retangulo_vidaNave.setOutline('white')
+    texto_vidaNave = gf.Text(gf.Point(530, 36), f'Vida da nave:')
+    texto_vidaNave.setTextColor('white')
+    texto_vidaNave.setSize(14)
 
-    return [background, pontuacao, Abates, retangulo_vida, retangulo_vidaNave]
+    return [background, pontuacao, Abates, retangulo_vida, retangulo_vidaNave, texto_vida, texto_vidaNave]
 
 itensJogo = drawEstrutura()
+
+def retangulo_vida_planeta():
+
+    retangulo1 = gf.Rectangle(gf.Point(507, 7), gf.Point(521, 22))
+    retangulo1.setFill('red')
+    retangulo2 = gf.Rectangle(gf.Point(525, 7), gf.Point(539, 22))
+    retangulo2.setFill('red')
+    retangulo3 = gf.Rectangle(gf.Point(543, 7), gf.Point(557, 22))
+    retangulo3.setFill('red')
+    retangulo4 = gf.Rectangle(gf.Point(561, 7), gf.Point(575, 22))
+    retangulo4.setFill('red')
+    retangulo5 = gf.Rectangle(gf.Point(579, 7), gf.Point(593, 22))
+    retangulo5.setFill('red')
+    retangulo6 = gf.Rectangle(gf.Point(597, 7), gf.Point(611, 22))
+    retangulo6.setFill('red')
+    retangulo7 = gf.Rectangle(gf.Point(615, 7), gf.Point(629, 22))
+    retangulo7.setFill('red')
+    retangulo8 = gf.Rectangle(gf.Point(633, 7), gf.Point(647, 22))
+    retangulo8.setFill('red')
+    retangulo9 = gf.Rectangle(gf.Point(651, 7), gf.Point(665, 22))
+    retangulo9.setFill('red')
+    retangulo10 = gf.Rectangle(gf.Point(669, 7), gf.Point(683, 22))
+    retangulo10.setFill('red')
+
+    lista_vida = [retangulo1, retangulo2, retangulo3, retangulo4, retangulo5, retangulo6, retangulo7, retangulo8, retangulo9, retangulo10]
+    return lista_vida
+
+barrasVida = retangulo_vida_planeta()
 
 iniciar = False
 sair = False
@@ -103,13 +134,9 @@ while iniciar == False and sair == False:
             elem.undraw()
         for elem in itensJogo:
             elem.draw(win)
+        for elem in barrasVida:
+            elem.draw(win)
         break
-
-#def retangulo_vida_planeta():
-
-test= gf.Rectangle(gf.Point(377, 7), gf.Point(390, 22))
-test.setFill('red')
-test.draw(win)
 
 nave = gf.Image(gf.Point(350, 745), 'img/nave.png')
 hitbox= gf.Circle(gf.Point(350, 750), 40)
@@ -144,7 +171,9 @@ dificultador_speedinimigo=50
 dificultador_qntinimigo=50
 timer=100
 
-while True:
+vida = 10
+
+while vida > 0:
 
     #---------------------------------TEMPORIZADOR------------------------------------
     temporizador = gf.Text(gf.Point(50,50), str(seg))
@@ -170,14 +199,17 @@ while True:
         lista_inimigos.append(inimigo)
         inimigo.draw(win)
         cont = 0
-    
+
+    #passou = False
     for elem in lista_inimigos:
         elem.move(0,velocidadeInimigo)
         if elem.getCenter().getY() == 820: # MOVE OS INIMIGOS E TAMBÉM OS ELIMINA EM CASO DE PASSAR DA TELA
             elem.undraw()
             lista_inimigos.remove(elem)
-        
-    #bordaesq = gf.Point(50, 750)
+            
+            vida -= 1
+            barrasVida[vida].undraw()
+            print(vida)
 
     #----------------------- MOVIMENTAÇÃO DA NAVE -----------------------------------
     teste = win.checkKey()
@@ -290,7 +322,7 @@ while True:
             timer-=10
         
     #print(velocidadeInimigo)
-    print(timer)
+    #dprint(timer)
     cont+=1
     ms+=1
     gf.update(60)
@@ -301,11 +333,10 @@ while True:
     #print(tiro.getP2())
     #print(tiro.getCenter())
 
-'''Proximos passos:
-1- Aumentar a dificuldade conforme o contador de pontuação
+'''
+Proximos passos (em ordem de prioridade):
+1- Arrumar o sistema de aumento de dificuldade
 2- Estabelecer a colisão com a nave.
-3- Melhorar a estética do game.
-4- Talvez implementar um menu.
-5- Adicionar sprites, e talvez mudar sprite da nave.
-6- Adicionar animação de explosão na colisão dos inimigos.
+3- Adicionar sprites para os inimigos.
+4- Melhorar o menu.
 '''
