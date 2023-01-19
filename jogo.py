@@ -9,35 +9,51 @@ def menu():
     botaoIniciar = gf.Rectangle(gf.Point(250, 250), gf.Point(450, 330))
     botaoIniciar.setFill('dark green')
     botaoIniciar.setOutline('white')
+    textoIniciar = gf.Text(gf.Point(350, 290), 'Jogar')
+    textoIniciar.setTextColor('white')
+    textoIniciar.setSize(34)
 
     botaoSobre = gf.Rectangle(gf.Point(250, 350), gf.Point(450, 430))
     botaoSobre.setFill('dark orange')
     botaoSobre.setOutline('white')
+    textoSobre = gf.Text(gf.Point(350, 390), 'Sobre o Jogo')
+    textoSobre.setTextColor('white')
+    textoSobre.setSize(24)
 
     botaoSair = gf.Rectangle(gf.Point(250, 450), gf.Point(450, 530))
     botaoSair.setFill('dark red')
     botaoSair.setOutline('white')
+    textoSair = gf.Text(gf.Point(350, 490), 'Sair')
+    textoSair.setTextColor('white')
+    textoSair.setSize(26)
 
-    return [background, botaoIniciar, botaoSobre, botaoSair]
+    return [background, botaoIniciar, botaoSobre, botaoSair, textoIniciar, textoSobre, textoSair]
 
 itensMenu = menu()
 
 def sobreOjogo():
     background = gf.Image(gf.Point(350, 400), 'img/background.png')
-    texto1 = gf.Text(gf.Point(345, 250), f'Sprisco Invaders é um jogo de batalha espacial onde o jogador\ntem o objetivo de protejer o planeta Terra de invasores alienígenas.')
+    texto1 = gf.Text(gf.Point(345, 120), f'Sprisco Invaders é um jogo de batalha espacial onde o jogador\ntem o objetivo de protejer o planeta Terra de invasores alienígenas.')
     texto1.setTextColor('white')
     texto1.setSize(14)
 
-    texto2 = gf.Text(gf.Point(340, 350), f'O jogador controla uma nave espacial que possui lançadores de laser\naltamente tecnológicos e que são capazes de eliminar os inimigos.')
+    texto2 = gf.Text(gf.Point(340, 180), f'O jogador controla uma nave espacial que possui lançadores de laser\naltamente tecnológicos e que são capazes de eliminar os inimigos.')
     texto2.setTextColor('white')
     texto2.setSize(14)
 
-    texto3 = gf.Text(gf.Point(340, 535), f'O jogo conta com uma mecânica simples e de fácil aprendizado.\n\nMapeamento de botões:\n\nAtirar: clique esquerdo do mouse\n\nMover a nave para equerda: tecla "a"\n\nMover a nave para direita: tecla "d"')
+    texto3 = gf.Text(gf.Point(350, 250), f'O jogador deve impedir que a vida da nave ou a do planeta cheguem a zero.\nCaso isso aconteça o jogo será finalizado e o jogador poderá ver sua pontuação.')
     texto3.setTextColor('white')
     texto3.setSize(14)
 
+    texto4 = gf.Text(gf.Point(350, 410), f'Além dos inimigos, também existem as naves aliadas que podem trazer\nmelhorias para a nave do jogador ou até mesmo regenerar sua vida.\n\nTipos de melhorias:\n\nRegeneração de vida\n\nAumento da velocidade de movimento\n\nAumento na quantidade de disparos')
+    texto4.setTextColor('white')
+    texto4.setSize(14)
 
-    return [background, texto1, texto2, texto3]
+    texto5 = gf.Text(gf.Point(340, 660), f'O jogo conta com uma mecânica simples e de fácil aprendizado.\n\nMapeamento de botões:\n\nAtirar: clique esquerdo do mouse\n\nMover a nave para equerda: tecla "a"\n\nMover a nave para direita: tecla "d"')
+    texto5.setTextColor('white')
+    texto5.setSize(14)
+
+    return [background, texto1, texto2, texto3, texto4, texto5]
 
 itensSobre = sobreOjogo()
 
@@ -97,6 +113,27 @@ def retangulo_vida_planeta():
     return lista_vida
 
 barrasVida = retangulo_vida_planeta()
+    
+def retangulo_vida_nave():
+    retangulo1 = gf.Rectangle(gf.Point(597, 30), gf.Point(611, 44))
+    retangulo1.setFill('red')
+    retangulo2 = gf.Rectangle(gf.Point(615, 30), gf.Point(629, 44))
+    retangulo2.setFill('red')
+    retangulo3 = gf.Rectangle(gf.Point(633, 30), gf.Point(647, 44))
+    retangulo3.setFill('red')
+    retangulo4 = gf.Rectangle(gf.Point(651, 30), gf.Point(665, 44))
+    retangulo4.setFill('red')
+    retangulo5 = gf.Rectangle(gf.Point(669, 30), gf.Point(683, 44))
+    retangulo5.setFill('red')
+
+    lista_vida = [retangulo1, retangulo2, retangulo3, retangulo4, retangulo5]
+    return lista_vida
+
+barrasVidaNave = retangulo_vida_nave()
+
+def explosao(x):
+    explosoes = [gf.Image(x.getCenter(), 'img/explosao 0.png'),gf.Image(x.getCenter(), 'img/explosao 1.png'),gf.Image(x.getCenter(), 'img/explosao 2.png'),gf.Image(x.getCenter(), 'img/explosao 3.png'),gf.Image(x.getCenter(), 'img/explosao 4.png'),gf.Image(x.getCenter(), 'img/explosao 5.png'),gf.Image(x.getCenter(), 'img/explosao 6.png')]
+    return explosoes
 
 iniciar = False
 sair = False
@@ -136,13 +173,22 @@ while iniciar == False and sair == False:
             elem.draw(win)
         for elem in barrasVida:
             elem.draw(win)
-        break
+        for elem in barrasVidaNave:
+            elem.draw(win)
+        
 
 nave = gf.Image(gf.Point(350, 745), 'img/nave.png')
-hitbox= gf.Circle(gf.Point(350, 750), 40)
-hitbox.setOutline('black')
-hitbox.draw(win)
 nave.draw(win)
+hitbox= gf.Line(gf.Point(337, 700), gf.Point(363, 700))
+hitbox.setOutline('red')
+
+hitbox_asaEsquerda = gf.Line(gf.Point(305, 760), gf.Point(330, 760))
+hitbox_asaEsquerda.setOutline('red')
+
+hitbox_asaDireita = gf.Line(gf.Point(371, 760), gf.Point(396, 760))
+hitbox_asaDireita.setOutline('red')
+
+lista_hitbox = [hitbox, hitbox_asaEsquerda, hitbox_asaDireita]
 
 lista_inimigos=[]
 lista_tiros=[]
@@ -161,19 +207,16 @@ to_em_a = False
 loop_a = False 
 velocidadeInimigo = 1
 
-def explosao(x):
-    explosoes= [gf.Image(x.getCenter(), 'img/explosao 0.png'),gf.Image(x.getCenter(), 'img/explosao 1.png'),gf.Image(x.getCenter(), 'img/explosao 2.png'),gf.Image(x.getCenter(), 'img/explosao 3.png'),gf.Image(x.getCenter(), 'img/explosao 4.png'),gf.Image(x.getCenter(), 'img/explosao 5.png'),gf.Image(x.getCenter(), 'img/explosao 6.png')]
-    return explosoes
-
-ta_explodindo= False
-qual_explosao= 0
-dificultador_speedinimigo=50
-dificultador_qntinimigo=50
-timer=100
+ta_explodindo = False
+qual_explosao = 0
+dificultador_speedinimigo = 50
+dificultador_qntinimigo = 50
+timer = 100
 
 vida = 10
+vidaNave = 5
 
-while vida > 0:
+while vida > 0 and vidaNave > 0:
 
     #---------------------------------TEMPORIZADOR------------------------------------
     temporizador = gf.Text(gf.Point(50,50), str(seg))
@@ -200,7 +243,6 @@ while vida > 0:
         inimigo.draw(win)
         cont = 0
 
-    #passou = False
     for elem in lista_inimigos:
         elem.move(0,velocidadeInimigo)
         if elem.getCenter().getY() == 820: # MOVE OS INIMIGOS E TAMBÉM OS ELIMINA EM CASO DE PASSAR DA TELA
@@ -209,7 +251,7 @@ while vida > 0:
             
             vida -= 1
             barrasVida[vida].undraw()
-            print(vida)
+            #adprint(vida)
 
     #----------------------- MOVIMENTAÇÃO DA NAVE -----------------------------------
     teste = win.checkKey()
@@ -263,12 +305,16 @@ while vida > 0:
     
     if direcao == 'a':
         if hitbox.getCenter().getX() > 2:
-            hitbox.move(-4,0)
+            hitbox.move(-4, 0)
+            hitbox_asaEsquerda.move(-4, 0)
+            hitbox_asaDireita.move(-4, 0)
             nave.move(-4, 0)       
 
     if direcao == 'd':
         if hitbox.getCenter().getX() < 698:
-            hitbox.move(4,0)
+            hitbox.move(4, 0)
+            hitbox_asaEsquerda.move(4, 0)
+            hitbox_asaDireita.move(4, 0)
             nave.move(4, 0)
 
     #---------------------------------- TIRO ---------------------------------------      
@@ -292,7 +338,6 @@ while vida > 0:
         for a in lista_inimigos:
             if elem.getP1().getY() <= a.getP2().getY() <= hitbox.getP1().getY():
                 if a.getP1().getX() <= elem.getP1().getX() <= a.getP2().getX():
-                    
                     elem.undraw()
                     lista_tiros.remove(elem)
                     a.undraw()      
@@ -301,6 +346,28 @@ while vida > 0:
                     lista_inimigos.remove(a)
                     inimigos_mortos += 1
                     seg += 2
+    
+    #----------------------------------COLISÃO DOS INIMIGOS COM A NAVE-----------------------------  
+    for elem in lista_inimigos:
+        for a in lista_hitbox:
+            if elem.getP2().getY() >= a.getP1().getY():
+                if elem.getP1().getX() <= a.getP1().getX() <= elem.getP2().getX():
+                    lista_inimigos.remove(elem)
+                    elem.undraw()
+                    ta_explodindo = True
+                    quem_explodiu = elem
+                    vidaNave -= 1
+                    barrasVidaNave[vidaNave].undraw()
+                    print(vidaNave)
+
+                elif elem.getP1().getX() <= a.getP2().getX() <= elem.getP2().getX():
+                    lista_inimigos.remove(elem)
+                    elem.undraw()
+                    ta_explodindo = True
+                    quem_explodiu = elem
+                    vidaNave -= 1
+                    barrasVidaNave[vidaNave].undraw()
+                    print(vidaNave)
 
     if ta_explodindo:
         boom= explosao(quem_explodiu)           
@@ -336,7 +403,8 @@ while vida > 0:
 '''
 Proximos passos (em ordem de prioridade):
 1- Arrumar o sistema de aumento de dificuldade
-2- Estabelecer a colisão com a nave.
-3- Adicionar sprites para os inimigos.
+2- Adicionar sprites para os inimigos.
+3- Criar uma tela de fim de jogo
 4- Melhorar o menu.
+
 '''
