@@ -226,6 +226,7 @@ def jogo():
 
     #VARIÁVEIS QUE SÃO UTILIZADAS DURANTE O LOOP
     lista_inimigos=[]
+    lista_alien=[]
     lista_tiros=[]
     lista_aliado = []
     cont=0
@@ -271,36 +272,52 @@ def jogo():
         #----------------------------------------------GERADOR DE INIMIGOS------------------------------------------------
         if cont == timer:
             X = random.randint(5,680)
-            inimigo = gf.Rectangle(gf.Point(X, -20), gf.Point(X + 40, 20)) # CRIA INIMIGOS DE ACORDO COM O TEMPO, E OS ADICIONA NA LISTA DE INIMIGOS
-            inimigo.setOutline('red')
-            inimigo.setFill('red')
+            inimigo = gf.Rectangle(gf.Point(X, -20), gf.Point(X + 40, 15)) # CRIA INIMIGOS DE ACORDO COM O TEMPO, E OS ADICIONA NA LISTA DE INIMIGOS
+            alien = gf.Image(inimigo.getCenter(), 'img/alien1.png')
+            lista_alien.append(alien)
+            #inimigo.setOutline('red')
             lista_inimigos.append(inimigo)
-            inimigo.draw(win)
+            alien.draw(win)
+            #inimigo.draw(win)
             cont = 0
 
-        for elem in lista_inimigos:
-            elem.move(0,velocidadeInimigo)
-            if elem.getCenter().getY() >= 820: # MOVE OS INIMIGOS E TAMBÉM OS ELIMINA EM CASO DE PASSAR DA TELA
-                elem.undraw()
-                lista_inimigos.remove(elem)
+        cont_inimigo=0
+        for i in lista_inimigos:
+            i.move(0,velocidadeInimigo)
+            lista_alien[cont_inimigo].move(0,velocidadeInimigo)                
+            cont_inimigo+=1
+
+        cont_inimigo=0
+        for i in lista_alien:
+            if i.getAnchor().getY() >= 820: # MOVE OS INIMIGOS E TAMBÉM OS ELIMINA EM CASO DE PASSAR DA TELA
+                lista_alien.remove(i)
+                lista_inimigos.remove(lista_inimigos[cont_inimigo])
+                i.undraw()
+                lista_inimigos[cont_inimigo].undraw()
                 vida -= 1
                 barrasVida[vida].undraw()
-                #print(vida)
+            cont_inimigo+=1
 
         #-----------------------------------------------------GERADOR DE ALIADOS------------------------------------------------------
         if seg >= buff and len(lista_aliado) == 0:
             X = random.randint(5,680)
             aliado = gf.Rectangle(gf.Point(X, -20), gf.Point(X + 40, 20)) # CRIA ALIADOS DE ACORDO COM A PONTUAÇÃO, E OS ADICIONA NA LISTA DE ALIADOS
             aliado.setOutline('blue')
-            aliado.setFill('green')
+            bufff = gf.Image(aliado.getCenter(), 'img/buff.png')
+            #aliado.setFill('green')
             lista_aliado.append(aliado)
-            aliado.draw(win)
+            #aliado.draw(win)
+            bufff.draw(win)
             buff += 100
         
+        cont_aliado= 0
         for elem in lista_aliado:
             elem.move(0, 1)
+            bufff.move(0, 1)                
+            
             if elem.getCenter().getY() >= 820: #MOVE O ALIADO E SE CASO ELE PASSAR DA TELA É REMOVIDO DA LISTA
                 elem.undraw()
+                bufff.undraw()
                 lista_aliado.remove(elem)
 
         #----------------------- MOVIMENTAÇÃO DA NAVE -----------------------------------
@@ -396,25 +413,34 @@ def jogo():
 
         #--------------------------- COLISÃO DOS TIROS COM INIMIGOS---------------------------------
         for elem in lista_tiros:
+            cont_inimigo=0
             for a in lista_inimigos:
                 if elem.getP1().getY() <= a.getP2().getY() <= hitbox.getP1().getY():
                     if a.getP1().getX() <= elem.getP1().getX() <= a.getP2().getX():
-                        elem.undraw()
-                        lista_tiros.remove(elem)
-                        a.undraw()      
                         ta_explodindo= True      
                         quem_explodiu= a
+                        elem.undraw()
+                        a.undraw()    
+                        lista_alien[cont_inimigo].undraw() 
+                        lista_tiros.remove(elem)
                         lista_inimigos.remove(a)
+                        lista_alien.remove(lista_alien[cont_inimigo])
                         inimigos_mortos += 1
                         seg += 2
+                cont_inimigo+=1
+                    
+                
         
         #----------------------------------COLISÃO DOS INIMIGOS COM A NAVE-----------------------------  
+        cont_inimigo=0
         for elem in lista_inimigos:
             for a in lista_hitbox:
                 if elem.getP2().getY() >= a.getP1().getY():
                     if elem.getP1().getX() <= a.getP1().getX() <= elem.getP2().getX():
-                        lista_inimigos.remove(elem)
                         elem.undraw()
+                        lista_alien[cont_inimigo].undraw()
+                        lista_inimigos.remove(elem)
+                        lista_alien.remove(lista_alien[cont_inimigo])
                         ta_explodindo = True
                         quem_explodiu = elem
                         vidaNave -= 1
@@ -422,8 +448,10 @@ def jogo():
                         #print(vidaNave)
 
                     elif elem.getP1().getX() <= a.getP2().getX() <= elem.getP2().getX():
-                        lista_inimigos.remove(elem)
                         elem.undraw()
+                        lista_alien[cont_inimigo].undraw()
+                        lista_inimigos.remove(elem)
+                        lista_alien.remove(lista_alien[cont_inimigo])
                         ta_explodindo = True
                         quem_explodiu = elem
                         vidaNave -= 1
@@ -437,6 +465,7 @@ def jogo():
                     if elem.getP1().getX() <= a.getP1().getX() <= elem.getP2().getX():
                         lista_aliado.remove(elem)
                         elem.undraw()
+                        bufff.undraw()
                         #ta_explodindo = True
                         #quem_explodiu = elem
 
@@ -458,6 +487,7 @@ def jogo():
                     elif elem.getP1().getX() <= a.getP2().getX() <= elem.getP2().getX():
                         lista_aliado.remove(elem)
                         elem.undraw()
+                        bufff.undraw()
                         #ta_explodindo = True
                         #quem_explodiu = elem
                         velocidadeNave += 1
@@ -490,11 +520,13 @@ def jogo():
         if seg > dificultador_speedinimigo: #AUMENTO DA VELOCIDADE DOS INIMIGOS
             velocidadeInimigo += 0.5
             dificultador_speedinimigo+=50
+            print('wtffffff')
         
         if seg > dificultador_qntinimigo: #AUMENTO NA VELOCIDADE QUE OS INIMIGOS SÃO GERADOS
             if timer > 60:
                 dificultador_qntinimigo+=50
                 timer-=10
+                print('wtffffff22222222222')
 
         
         #print(velocidadeInimigo)
