@@ -227,6 +227,7 @@ def jogo():
     #VARIÁVEIS QUE SÃO UTILIZADAS DURANTE O LOOP
     lista_inimigos=[]
     lista_tiros=[]
+    lista_aliado = []
     cont=0
     seg=0
     ms=0
@@ -238,10 +239,12 @@ def jogo():
     cont_a_parado = 0
     to_em_a = False
     velocidadeInimigo = 1
+    velocidadeNave = 4
     ta_explodindo = False
     qual_explosao = 0
     dificultador_speedinimigo = 50
     dificultador_qntinimigo = 50
+    buff = 20
     timer = 100
     vida = 10
     vidaNave = 5
@@ -283,6 +286,22 @@ def jogo():
                 barrasVida[vida].undraw()
                 #print(vida)
 
+        #-----------------------------------------------------GERADOR DE ALIADOS------------------------------------------------------
+        if seg >= buff and len(lista_aliado) == 0:
+            X = random.randint(5,680)
+            aliado = gf.Rectangle(gf.Point(X, -20), gf.Point(X + 40, 20)) # CRIA ALIADOS DE ACORDO COM A PONTUAÇÃO, E OS ADICIONA NA LISTA DE ALIADOS
+            aliado.setOutline('blue')
+            aliado.setFill('green')
+            lista_aliado.append(aliado)
+            aliado.draw(win)
+            buff += 30
+        
+        for elem in lista_aliado:
+            elem.move(0, 1)
+            if elem.getCenter().getY() >= 820: #MOVE O ALIADO E SE CASO ELE PASSAR DA TELA É REMOVIDO DA LISTA
+                elem.undraw()
+                lista_aliado.remove(elem)
+
         #----------------------- MOVIMENTAÇÃO DA NAVE -----------------------------------
         teste = win.checkKey()
         #print("                                 >",teste,"<")  
@@ -323,8 +342,7 @@ def jogo():
             cont_a_parado = 0        
             to_em_a = True        
             cont_d_parado = 0        
-            to_em_d = False 
-            loop_a = True 
+            to_em_d = False
 
         #--------------------------MOVIMENTAÇÃO LISA DO PRISCO--------------------------------------
         if teste == '' and to_em_d:
@@ -347,17 +365,17 @@ def jogo():
         
         if direcao == 'a':
             if hitbox.getCenter().getX() > 2:
-                hitbox.move(-4, 0)
-                hitbox_asaEsquerda.move(-4, 0)
-                hitbox_asaDireita.move(-4, 0)
-                nave.move(-4, 0)       
+                hitbox.move(-velocidadeNave, 0)
+                hitbox_asaEsquerda.move(-velocidadeNave, 0)
+                hitbox_asaDireita.move(-velocidadeNave, 0)
+                nave.move(-velocidadeNave, 0)      
 
         if direcao == 'd':
             if hitbox.getCenter().getX() < 698:
-                hitbox.move(4, 0)
-                hitbox_asaEsquerda.move(4, 0)
-                hitbox_asaDireita.move(4, 0)
-                nave.move(4, 0)
+                hitbox.move(velocidadeNave, 0)
+                hitbox_asaEsquerda.move(velocidadeNave, 0)
+                hitbox_asaDireita.move(velocidadeNave, 0)
+                nave.move(velocidadeNave, 0)
 
         #---------------------------------- TIRO ---------------------------------------      
         if len(lista_tiros) < 5:  #LIMITADOR DE TIROS
@@ -410,7 +428,52 @@ def jogo():
                         vidaNave -= 1
                         barrasVidaNave[vidaNave].undraw()
                         #print(vidaNave)
-        
+
+        #----------------------------------COLISÃO DO ALIADO COM A NAVE-----------------------------  
+        for elem in lista_aliado:
+            for a in lista_hitbox:
+                if elem.getP2().getY() >= a.getP1().getY():
+                    if elem.getP1().getX() <= a.getP1().getX() <= elem.getP2().getX():
+                        lista_aliado.remove(elem)
+                        elem.undraw()
+                        #ta_explodindo = True
+                        #quem_explodiu = elem
+
+                        if vidaNave < 5:       #CASO A NAVE JÁ TENHA TOMADO ALGUM DANO ENTÃO O BUFF TEM A CHANCE DE SER UMA RECUPERAÇÃO DE VIDA
+                            sorteio = random.randint(0, 1)
+                            #print(f'sorteio: {sorteio}')
+
+                            if sorteio == 0:
+                                vidaNave += 1
+                                barrasVidaNave[vidaNave - 1].draw(win)
+                            if sorteio == 1:
+                                velocidadeNave += 0.5
+                        else:                           #CASO AINDA NÃO TENHA TOMADO DANO O BUFF AUTOMATICAMENTE SERÁ AUMENTO DE VELOCIDADE
+                            velocidadeNave += 0.5
+
+                        #print(f'velocidade da nave: {velocidadeNave}')
+                        #print(f'vida da nave: {vidaNave}')
+
+                    elif elem.getP1().getX() <= a.getP2().getX() <= elem.getP2().getX():
+                        lista_aliado.remove(elem)
+                        elem.undraw()
+                        #ta_explodindo = True
+                        #quem_explodiu = elem
+                        velocidadeNave += 1
+                        if vidaNave < 5:
+                            sorteio = random.randint(0, 1)
+                            print(f'sorteio{sorteio}')
+                            if sorteio == 0:
+                                velocidadeNave += 1
+                            if sorteio == 1:
+                                vidaNave+=1
+                                barrasVidaNave[vidaNave].draw(win)
+                        else:
+                            velocidadeNave += 1
+
+                        print(f'velocidade{velocidadeNave}')
+                        print(f'vida{vidaNave}')
+
         #----------------------------ANIMAÇÃO DE EXPLOSÃO DOS INIMIGOS--------------------------
         if ta_explodindo:
             boom= explosao(quem_explodiu)           
@@ -431,7 +494,8 @@ def jogo():
             if timer > 60:
                 dificultador_qntinimigo+=50
                 timer-=10
-            
+
+        
         #print(velocidadeInimigo)
         #print(timer)
         cont+=1
@@ -471,6 +535,7 @@ for elem in final:
 
 win.getMouse()
 win.close()
+
 '''
 Proximos passos (em ordem de prioridade):
 1- Adicionar sprites para os inimigos!!!!!!!!!!!!!!!!!!!!
