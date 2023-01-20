@@ -49,7 +49,7 @@ def sobreOjogo():
     texto4.setTextColor('white')
     texto4.setSize(14)
 
-    texto5 = gf.Text(gf.Point(340, 660), f'O jogo conta com uma mecânica simples e de fácil aprendizado.\n\nMapeamento de botões:\n\nAtirar: clique esquerdo do mouse\n\nMover a nave para equerda: tecla "a"\n\nMover a nave para direita: tecla "d"')
+    texto5 = gf.Text(gf.Point(340, 660), f'O jogo conta com uma mecânica simples e de fácil aprendizado.\n\nMapeamento de botões:\n\nAtirar: clique esquerdo do mouse\n\nMover a nave para equerda: tecla "a"\n\nMover a nave para direita: tecla "d"\n\nPausar o jogo: "Esc"')
     texto5.setTextColor('white')
     texto5.setSize(14)
 
@@ -131,6 +131,29 @@ def retangulo_vida_nave():
 
 barrasVidaNave = retangulo_vida_nave()
 
+def estrutura_pause():
+    textoPause = gf.Text(gf.Point(350, 400), f'PAUSE')
+    textoPause.setTextColor('white')
+    textoPause.setSize(36)
+
+    botaoContinuar = gf.Rectangle(gf.Point(230, 470), gf.Point(470, 530))
+    botaoContinuar.setOutline('white')
+    botaoContinuar.setFill('dark green')
+    textoContinuar = gf.Text(gf.Point(350, 500), 'Continuar')
+    textoContinuar.setTextColor('white')
+    textoContinuar.setSize(26)
+
+    botaoSair = gf.Rectangle(gf.Point(230, 550), gf.Point(470, 610))
+    botaoSair.setOutline('white')
+    botaoSair.setFill('dark red')   
+    textoSair = gf.Text(gf.Point(350, 580), 'Encerrar Jogo')
+    textoSair.setTextColor('white')
+    textoSair.setSize(22)
+
+
+    return [textoPause, botaoContinuar, textoContinuar, botaoSair, textoSair]
+
+pause = estrutura_pause()
 def explosao(x):
     explosoes = [gf.Image(x.getCenter(), 'img/explosao 0.png'),gf.Image(x.getCenter(), 'img/explosao 1.png'),gf.Image(x.getCenter(), 'img/explosao 2.png'),gf.Image(x.getCenter(), 'img/explosao 3.png'),gf.Image(x.getCenter(), 'img/explosao 4.png'),gf.Image(x.getCenter(), 'img/explosao 5.png'),gf.Image(x.getCenter(), 'img/explosao 6.png')]
     return explosoes
@@ -245,13 +268,12 @@ while vida > 0 and vidaNave > 0:
 
     for elem in lista_inimigos:
         elem.move(0,velocidadeInimigo)
-        if elem.getCenter().getY() == 820: # MOVE OS INIMIGOS E TAMBÉM OS ELIMINA EM CASO DE PASSAR DA TELA
+        if elem.getCenter().getY() >= 820: # MOVE OS INIMIGOS E TAMBÉM OS ELIMINA EM CASO DE PASSAR DA TELA
             elem.undraw()
             lista_inimigos.remove(elem)
-            
             vida -= 1
             barrasVida[vida].undraw()
-            #adprint(vida)
+            #print(vida)
 
     #----------------------- MOVIMENTAÇÃO DA NAVE -----------------------------------
     teste = win.checkKey()
@@ -259,13 +281,26 @@ while vida > 0 and vidaNave > 0:
 
     #-------------------------- TECLA PARA PAUSAR O JOGO ----------------------------
     if teste == 'Escape':
-        pause = gf.Text(gf.Point(350, 400), f'PAUSE')
-        pause.setTextColor('white')
-        pause.setSize(36)
-        pause.draw(win)
-
-        win.getMouse()
-        pause.undraw()
+        for elem in pause:
+            elem.draw(win)
+        
+    #------------------LÓGICA PARA SABER SE O USUÁRIO QUER CONTINUAR OU ENCERRAR O JOGO-----------------
+        encerrar = False
+        continuar = False
+        while encerrar == False and continuar == False:
+            clique = win.getMouse()
+            if 230 < clique.getX() < 470:
+                if 470 < clique.getY() < 530:
+                    continuar = True
+        
+                if 550 < clique.getY() < 610:
+                    encerrar = True
+        
+        if continuar == True:
+            for elem in pause:
+                elem.undraw()
+        if encerrar == True:
+            vida = 0
 
     #---------------------TECLA PARA MOVER A NAVE PARA A DIREITA -----------------------
     if teste == 'd':
@@ -358,7 +393,7 @@ while vida > 0 and vidaNave > 0:
                     quem_explodiu = elem
                     vidaNave -= 1
                     barrasVidaNave[vidaNave].undraw()
-                    print(vidaNave)
+                    #print(vidaNave)
 
                 elif elem.getP1().getX() <= a.getP2().getX() <= elem.getP2().getX():
                     lista_inimigos.remove(elem)
@@ -367,7 +402,7 @@ while vida > 0 and vidaNave > 0:
                     quem_explodiu = elem
                     vidaNave -= 1
                     barrasVidaNave[vidaNave].undraw()
-                    print(vidaNave)
+                    #print(vidaNave)
 
     if ta_explodindo:
         boom= explosao(quem_explodiu)           
@@ -384,27 +419,29 @@ while vida > 0 and vidaNave > 0:
         dificultador_speedinimigo+=50
     
     if seg > dificultador_qntinimigo:
-        if timer > 10:
+        if timer > 60:
             dificultador_qntinimigo+=50
             timer-=10
         
     #print(velocidadeInimigo)
-    #dprint(timer)
+    #print(timer)
     cont+=1
     ms+=1
     gf.update(60)
     temporizador.undraw()
     contAbates.undraw()
-        
+
     #print(hitbox.getP2())
     #print(tiro.getP2())
     #print(tiro.getCenter())
+if vidaNave == 0:
+    nave.undraw()
 
+win.getMouse()
 '''
 Proximos passos (em ordem de prioridade):
 1- Arrumar o sistema de aumento de dificuldade
 2- Adicionar sprites para os inimigos.
 3- Criar uma tela de fim de jogo
 4- Melhorar o menu.
-
 '''
