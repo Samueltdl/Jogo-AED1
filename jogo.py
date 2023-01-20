@@ -244,7 +244,7 @@ def jogo():
     qual_explosao = 0
     dificultador_speedinimigo = 50
     dificultador_qntinimigo = 50
-    buff = 20
+    buff = 100
     timer = 100
     vida = 10
     vidaNave = 5
@@ -268,6 +268,7 @@ def jogo():
             seg += 1
             #print(seg)
 
+        #----------------------------------------------GERADOR DE INIMIGOS------------------------------------------------
         if cont == timer:
             X = random.randint(5,680)
             inimigo = gf.Rectangle(gf.Point(X, -20), gf.Point(X + 40, 20)) # CRIA INIMIGOS DE ACORDO COM O TEMPO, E OS ADICIONA NA LISTA DE INIMIGOS
@@ -294,7 +295,7 @@ def jogo():
             aliado.setFill('green')
             lista_aliado.append(aliado)
             aliado.draw(win)
-            buff += 30
+            buff += 100
         
         for elem in lista_aliado:
             elem.move(0, 1)
