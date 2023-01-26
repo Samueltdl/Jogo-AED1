@@ -426,7 +426,7 @@ def jogo():
                         lista_alien.remove(lista_alien[cont_inimigo])
                         inimigos_mortos += 1
                         seg += 2
-                cont_inimigo+=1        
+                cont_inimigo+=1
         
         #----------------------------------COLISÃO DOS INIMIGOS COM A NAVE-----------------------------  
         cont_inimigo=0
@@ -517,13 +517,13 @@ def jogo():
         if seg > dificultador_speedinimigo: #AUMENTO DA VELOCIDADE DOS INIMIGOS
             velocidadeInimigo += 0.5
             dificultador_speedinimigo+=50
-            print('wtffffff')
+            #print('wtffffff')
         
         if seg > dificultador_qntinimigo: #AUMENTO NA VELOCIDADE QUE OS INIMIGOS SÃO GERADOS
             if timer > 60:
                 dificultador_qntinimigo+=50
                 timer-=10
-                print('wtffffff')
+                #print('wtffffff')
 
         
         #print(velocidadeInimigo)
@@ -571,4 +571,5 @@ Proximos passos (em ordem de prioridade):
 1- Adicionar um sprite para quando a nave tomar dano.
 2- Talvez adicionar o sprite de explosão se a vida da nave chegar a zero.
 3- Talvez dar uma melhorada na tela de fim de jogo.
+4- Implementar um sistema para armazenas as pontuações.
 '''
