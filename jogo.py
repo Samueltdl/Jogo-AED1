@@ -310,10 +310,9 @@ def jogo():
             bufff.draw(win)
             buff += 100
         
-        cont_aliado= 0
         for elem in lista_aliado:
-            elem.move(0, 1)
-            bufff.move(0, 1)                
+            elem.move(0, 1.5)
+            bufff.move(0, 1.5)                
             
             if elem.getCenter().getY() >= 820: #MOVE O ALIADO E SE CASO ELE PASSAR DA TELA É REMOVIDO DA LISTA
                 elem.undraw()
@@ -353,7 +352,7 @@ def jogo():
             to_em_d = True        
             cont_a_parado = 0        
             to_em_a = False
-            loop_d = True        
+            #loop_d = True        
 
         #-------------------------TECLA PARA MOVER A NAVE PARA A EQAUERDA--------------------------
         if teste == 'a':
@@ -427,9 +426,7 @@ def jogo():
                         lista_alien.remove(lista_alien[cont_inimigo])
                         inimigos_mortos += 1
                         seg += 2
-                cont_inimigo+=1
-                    
-                
+                cont_inimigo+=1        
         
         #----------------------------------COLISÃO DOS INIMIGOS COM A NAVE-----------------------------  
         cont_inimigo=0
@@ -474,15 +471,15 @@ def jogo():
                             #print(f'sorteio: {sorteio}')
 
                             if sorteio == 0:
+                                barrasVidaNave[vidaNave].draw(win)
                                 vidaNave += 1
-                                barrasVidaNave[vidaNave - 1].draw(win)
                             if sorteio == 1:
                                 velocidadeNave += 0.5
                         else:                           #CASO AINDA NÃO TENHA TOMADO DANO O BUFF AUTOMATICAMENTE SERÁ AUMENTO DE VELOCIDADE
                             velocidadeNave += 0.5
 
-                        #print(f'velocidade da nave: {velocidadeNave}')
-                        #print(f'vida da nave: {vidaNave}')
+                        print(f'velocidade da nave: {velocidadeNave}')
+                        print(f'vida da nave: {vidaNave}')
 
                     elif elem.getP1().getX() <= a.getP2().getX() <= elem.getP2().getX():
                         lista_aliado.remove(elem)
@@ -497,8 +494,8 @@ def jogo():
                             if sorteio == 0:
                                 velocidadeNave += 1
                             if sorteio == 1:
-                                vidaNave+=1
                                 barrasVidaNave[vidaNave].draw(win)
+                                vidaNave+=1
                         else:
                             velocidadeNave += 1
 
@@ -526,7 +523,7 @@ def jogo():
             if timer > 60:
                 dificultador_qntinimigo+=50
                 timer-=10
-                print('wtffffff22222222222')
+                print('wtffffff')
 
         
         #print(velocidadeInimigo)
@@ -565,14 +562,13 @@ def fimJogo():
 final = fimJogo()
 for elem in final:
     elem.draw(win)
-
+sleep(2)
 win.getMouse()
 win.close()
 
 '''
 Proximos passos (em ordem de prioridade):
-1- Adicionar sprites para os inimigos!!!!!!!!!!!!!!!!!!!!
-2- Adicionar um sprite para quando a nave tomar dano.
-3- Talvez adicionar o sprite de explosão se a vida da nave chegar a zero.
-4- Talvez dar uma melhorada na tela de fim de jogo.
+1- Adicionar um sprite para quando a nave tomar dano.
+2- Talvez adicionar o sprite de explosão se a vida da nave chegar a zero.
+3- Talvez dar uma melhorada na tela de fim de jogo.
 '''
